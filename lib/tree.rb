@@ -137,29 +137,10 @@ class Tree
     arr_to_return
   end
 
-  def height(node = @root, left_counter = -1, right_counter = -1)
+  def height(node = @root)
+    return -1 if node.nil?
 
-    # right_counter = 0
-    # left_counter = 0
-    # lowest_left_node = node
-    # lowest_right_node = node
-
-    # until lowest_left_node.left_node.nil?
-    #   left_counter += 1
-    #   lowest_left_node = lowest_left_node.left_node
-    # end
-
-    # until lowest_right_node.right_node.nil?
-    #   right_counter += 1
-    #   lowest_right_node = lowest_right_node.right_node
-    # end
-
-    # left_counter > right_counter ? left_counter : right_counter    
-
-    return left_counter < right_counter ? left_counter : right_counter if node == nil
-
-    height(node.left_node, left_counter += 1, right_counter)
-    height(node.right_node, left_counter, right_counter += 1)
+    [height(node.left_node), height(node.right_node)].max + 1
   end
 
   def depth(node_to_find, node = @root, depth = 0)
@@ -173,6 +154,19 @@ class Tree
     end
   end
 
+  def balanced?(node = @root)
+    return true if (node.nil?)
+    left = height(node.left_node)
+    right = height(node.right_node)
+    min = [left, right].min
+    max = [left, right].max
+    return (max - min <= 1) && balanced?(node.left_node) && balanced?(node.right_node)
+  end
+
+  def rebalance
+    self.root = build_tree(self.inorder(self.root))
+  end
+
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right_node, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right_node
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
@@ -182,17 +176,10 @@ end
 
 tree = Tree.new([20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 150, 155, 160, 165, 170])
 
-# tree.insert(60)
 
-tree.pretty_print
 
-# p tree.find(110)
 
-# tree.pretty_print
 
-# p tree.preorder {|data| puts "#{data} is preordered"}
-
-p tree.depth(tree.find(170))
 
 
 
