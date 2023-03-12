@@ -20,8 +20,7 @@ class Tree
 
     node.right_node = build_tree(arr, mid + 1, end_index)
 
-    return node
-    
+    node
   end
 
   def insert(data_to_insert, node = @root)
@@ -31,13 +30,15 @@ class Tree
     if data_to_insert < node.data
       if node.left_node == nil
         return node.left_node = Node.new(data_to_insert)
+      else
+        node = insert(data_to_insert, node.left_node)
       end
-      node = insert(data_to_insert, node.left_node)
     else
       if node.right_node == nil
         return node.right_node = Node.new(data_to_insert)
+      else
+        node = insert(data_to_insert, node.right_node)
       end
-      node = insert(data_to_insert, node.right_node)
     end
   end
 
@@ -164,7 +165,8 @@ class Tree
   end
 
   def rebalance
-    self.root = build_tree(self.inorder(self.root))
+    self.data = inorder
+    self.root = build_tree(data)
   end
 
   def pretty_print(node = @root, prefix = '', is_left = true)
@@ -174,9 +176,46 @@ class Tree
   end
 end
 
-tree = Tree.new([20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 150, 155, 160, 165, 170])
+tree = Tree.new(Array.new(5) { rand(1..100) })
 
+tree.pretty_print
 
+puts "Tree balanced?"
+
+puts tree.balanced?
+
+puts "Level Order transversal:"
+tree.level_order { |data| print "#{data} "}
+
+puts "\nPreorder transversal:"
+tree.preorder { |data| print "#{data} " }
+
+puts "\nPostorder transversal:"
+tree.postorder { |data| print "#{data} " }
+
+puts "\nInorder transversal:"
+tree.inorder { |data| print "#{data} " }
+
+5.times do
+  tree.insert(rand(100))
+end
+
+puts
+
+tree.pretty_print
+
+puts "\nTree Balanced?"
+puts tree.balanced?
+
+puts "Refactoring..." if !tree.balanced?
+sleep(3)
+
+tree.rebalance
+
+puts "Tree Balanced?"
+puts tree.balanced?
+
+tree.pretty_print
 
 
 
